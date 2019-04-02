@@ -1,6 +1,4 @@
 # Device Tree for the LeapFrog Epic
-==============
-
 Device tree for building CyanogenMod on the LeapFrog Epic (MT8127).
 
 Basic   | Spec Sheet
