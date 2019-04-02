@@ -1,0 +1,15 @@
+# mount point	fstype    device    	[device2]
+
+/boot	   emmc	 /dev/bootimg          flags=display="Boot";backup=1
+/recovery  emmc	 /dev/recovery         flags=display="Recovery";backup=1
+/protect_f ext4  /dev/block/mmcblk0p2  flags=display="Persistent Storage";backup=1;wipeingui
+/system    ext4  /dev/block/mmcblk0p5  flags=display="System";backup=1;wipeingui;wipeduringfactoryreset
+/cache     ext4  /dev/block/mmcblk0p6  flags=display="Cache";backup=1;wipeingui;wipeduringfactoryreset
+/data      ext4  /dev/block/mmcblk0p7  flags=display="Data";backup=1;wipeingui;wipeduringfactoryreset
+#/emmc	   vfat  /dev/block/mmcblk0p6  flags=display="Phone Storage";settingsstorage
+/external_sd    auto  /dev/block/mmcblk1p1  flags=display="microSD";storage;removable;backup=0
+/usbotg    auto  /dev/block/sda1       flags=display="USB-OTG";storage;removable;backup=0
+#/sdcard   vfat  /dev/block/mmcblk1p1  flags=display="microSD";storage;removable
+#/sd-ext   auto  /dev/block/mmcblk1p2
+/nvram     emmc  /dev/nvram            flags=display="NVRAM";backup=1
+/uboot emmc /dev/uboot flags=display="Uboot";backup=1
