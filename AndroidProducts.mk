@@ -1,2 +1,2 @@
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/device_narnia.mk
+    $(LOCAL_DIR)/full_narnia.mk

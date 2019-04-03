@@ -1,5 +1,12 @@
 USE_CAMERA_STUB := true
 
+DEVICE_DIR := device/quanta/narnia
+VENDOR_DIR := vendor/quanta/narnia
+#KERNEL_DIR := kernel/quanta/narnia
+
+# Additional includes
+TARGET_SPECIFIC_HEADER_PATH := $(DEVICE_DIR)/include
+
 # inherit from the proprietary version
 -include vendor/quanta/narnia/BoardConfigVendor.mk
 
@@ -29,7 +36,84 @@ BOARD_USERDATAIMAGE_PARTITION_SIZE := 10908336128
 BOARD_CACHEIMAGE_PARTITION_SIZE := 1073741824
 BOARD_FLASH_BLOCK_SIZE := 131072
 
+TARGET_USERIMAGES_SPARSE_EXT_DISABLED := false
+BOARD_HAS_NO_MISC_PARTITION := true
+
+BACKLIGHT_PATH := "/sys/class/leds/lcd-backlight/brightness"
+
+# Vold
+TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/mt_usb/musb-hdrc.0.auto/gadget/lun%d/file
+
 TARGET_PREBUILT_KERNEL := device/quanta/narnia/kernel
+
+# MTK
+BOARD_HAS_MTK_HARDWARE := true
+MTK_HARDWARE := true
+BLOCK_BASED_OTA :=false
+
+# to be used with hardware/mediatek repo
+BOARD_HAS_MTK := true
+MTK_HWC_CHIP := mt8127
+MTK_HWC_SUPPORT := true
+MTK_WFD_SUPPORT := true
+MTK_PQ_SUPPORT := true
+MTK_ION_SUPPORT := true
+MTK_HDMI_SUPPORT := false
+MTK_SENSOR_SUPPORT := true
+
+# Flags
+TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
+TARGET_GLOBAL_CPPFLAGS += -DMTK_HARDWARE -mfpu=neon -mfloat-abi=softfp
+COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=60
+COMMON_GLOBAL_CFLAGS += -DMTK_HARDWARE
+COMMON_GLOBAL_CFLAGS += -DADD_LEGACY_ACQUIRE_BUFFER_SYMBOL
+COMMON_GLOBAL_CFLAGS += -DNO_SECURE_DISCARD
+
+# Graphics
+USE_OPENGL_RENDERER := true
+BOARD_EGL_CFG := $(DEVICE_DIR)/configs/egl.cfg
+TARGET_USES_C2D_COMPOSITION := true
+TARGET_USES_OVERLAY := true
+TARGET_USES_ION := true
+TARGET_DISPLAY_USE_RETIRE_FENCE := true
+MAX_EGL_CACHE_KEY_SIZE := 12*1024
+MAX_EGL_CACHE_SIZE := 1024*1024
+
+# Surfaceflinger optimization for VD surfaces
+TARGET_FORCE_HWC_FOR_VIRTUAL_DISPLAYS := true
+NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
+
+# WIFI
+WPA_SUPPLICANT_VERSION := VER_0_8_X
+BOARD_HOSTAPD_DRIVER := NL80211
+BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_mt66xx
+BOARD_WPA_SUPPLICANT_DRIVER := NL80211
+BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_mt66xx
+WIFI_DRIVER_FW_PATH_PARAM:="/dev/wmtWifi"
+WIFI_DRIVER_FW_PATH_STA:=STA
+WIFI_DRIVER_FW_PATH_AP:=AP
+WIFI_DRIVER_FW_PATH_P2P:=P2P
+
+# BT (added 03/10/2016)
+BOARD_HAVE_BLUETOOTH := true
+BOARD_HAVE_BLUETOOTH_MTK := true
+BOARD_BLUETOOTH_DOES_NOT_USE_RFKILL := true
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(DEVICE_DIR)/bluetooth
+
+# RECOVERY
+TARGET_RECOVERY_FSTAB := $(DEVICE_DIR)/recovery/root/recovery.fstab
+TARGET_RECOVERY_INITRC := $(DEVICE_DIR)/recovery/root/init.rc
+
+# Debug
+TWRP_INCLUDE_LOGCAT := true
+TARGET_USES_LOGD := true
+
+# libxlog
+TARGET_LDPRELOAD += libxlog.so
+
+# SELinux
+BOARD_SEPOLICY_DIRS := \
+       $(DEVICE_DIR)/sepolicy
 
 BOARD_MKBOOTIMG_ARGS := --base 10000000 --pagesize 2048 --kernel_offset 00008000 --ramdisk_offset 01000000 --tags_offset 00000100
 BOARD_HAS_NO_SELECT_BUTTON := true
