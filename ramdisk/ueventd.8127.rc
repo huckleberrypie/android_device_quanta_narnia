@@ -1,6 +1,3 @@
-subsystem adf
-	devname uevent_devname
-
 /dev/null                 0666   root       root
 /dev/zero                 0666   root       root
 /dev/full                 0666   root       root
@@ -8,63 +5,28 @@ subsystem adf
 /dev/tty                  0666   root       root
 /dev/random               0666   root       root
 /dev/urandom              0666   root       root
-# Make HW RNG readable by group system to let EntropyMixer read it.
-/dev/hw_random            0440   root       system
 /dev/ashmem               0666   root       root
 /dev/binder               0666   root       root
 
    #change partition permission
 /dev/preloader            0640   root       system
 /dev/bootimg              0640   root       system
-/dev/recovery             0660   root       system
+/dev/recovery             0640   root       system
 /dev/sec_ro               0640   root       system
 /dev/kb                   0660   root       system
 /dev/dkb                  0660   root       system
 /dev/seccfg               0660   root       system
 /dev/pro_info             0660	 root	    system
-/dev/otp 		  0660	 root	    system
+/dev/logo				  0660 	 root 		system
+/dev/otp 		  0660	 root	    nvram
 /dev/nvram 		   0660	 root	    system
 /dev/misc		   0660	 root	    system
 /dev/misc2		   0660	 root	    system
-/dev/block/platform/mtk-msdc.0/by-name/misc2		   0660	 root	    system
 /dev/block/mmcblk0	   0660	 root	    system
 /dev/block/mmcblk0boot0	   0660	 root	    system
+
+# change misc-sd to 0660 root system
 /dev/misc-sd              0660   root       system
-
-
-#connectivity
-# Create char device file for WMT, GPS, BT, FM, WIFI
-#    mknod /dev/stpwmt c 190 0;
-#    mknod /dev/stpgps c 191 0;
-#    mknod /dev/stpbt  c 192 0;
-
-#    chmod 0660 /dev/stpwmt
-#    chown system system /dev/stpwmt
-#    chmod 0660 /dev/wmtdetect
-#    chown system system /dev/wmtdetect
-#
-# BT
-#    chmod 0660 /dev/stpbt
-#    chown bluetooth radio /dev/stpbt
-#
-# GPS
-#    chown gps gps /dev/stpgps
-#    chmod 0660 /dev/stpgps
-
-/dev/stpwmt              0660  system      system
-/dev/wmtdetect           0660  system      system
-/dev/stpbt               0660  bluetooth   radio
-/dev/stpgps              0660  gps         gps
-/dev/stpant				 0660  system      system
-
-# WIFI
-#  chown system system /dev/wmtWifi
-#  chmod  0660  /dev/wmtWifi
-
-/dev/wmtWifi             0660  system      system
-
-# FMRadio
-/dev/fm			 0660  system	   media
 
 # add the read write right of ttyUSB*
 /dev/bus/usb/*     	  0660   root       usb
@@ -98,7 +60,6 @@ subsystem adf
 /dev/uhid                 0660   system     net_bt_stack
 /dev/uinput               0660   system     net_bt_stack
 /dev/alarm                0664   system     radio
-/dev/rtc0                 0640   system     system
 /dev/tty0                 0660   root       system
 /dev/graphics/*           0660   root       graphics
 /dev/msm_hw3dm            0660   system     graphics
@@ -146,17 +107,12 @@ subsystem adf
 /dev/usb_accessory        0660   root       usb
 /dev/tun                  0660   system     vpn
 
-/dev/ccci*                0660   radio       radio
-/dev/ttyC*                0660   radio       radio
-/sys/kernel/ccci          modem_info   0644   radio       radio
-/sys/kernel/ccci          md1_postfix  0644   radio       radio
-/sys/kernel/ccci          md2_postfix  0644   radio       radio
-/dev/eemcs*               0660   radio       radio
-/dev/ccci_pcm_rx          0660   media      media
-/dev/ccci_pcm_tx          0660   media      media
-/dev/ccci_aud             0660   media      media
-/dev/ccci2_aud            0660   media      media
-/dev/eemcs_aud            0660   media      media
+/dev/ccci*                0660   ccci       ccci
+/dev/ttyC*                0660   ccci       ccci
+/sys/kernel/ccci          modem_info   0644   ccci       ccci
+/sys/kernel/ccci          md1_postfix  0644   ccci       ccci
+/sys/kernel/ccci          md2_postfix  0644   ccci       ccci
+/dev/eemcs*               0660   ccci       ccci
 
 # SGX device node
 /dev/pvrsrvkm             0666   root       root
@@ -170,8 +126,6 @@ subsystem adf
 /sys/devices/virtual/input/input*   enable      0660  root   input
 /sys/devices/virtual/input/input*   poll_delay  0660  root   input
 /sys/devices/virtual/usb_composite/*   enable      0664  root   system
-/sys/devices/system/cpu/cpu*   cpufreq/scaling_max_freq   0664  system system
-/sys/devices/system/cpu/cpu*   cpufreq/scaling_min_freq   0664  system system
 /sys/devices/platform/leds-mt65xx/leds/green   delay_on      0664  system   system
 /sys/devices/platform/leds-mt65xx/leds/green   delay_off      0664  system   system
 /sys/devices/platform/leds-mt65xx/leds/red   delay_on      0664  system   system
@@ -199,10 +153,13 @@ subsystem adf
 # Mali node
 /dev/mali                0666    system graphics
 
-#touch
-/dev/touch              0660   root  system
-/dev/hotknot            0660   root  system
+#MTK In-House TEE
+/dev/trustzone            0660   root       drmrpc
+/dev/tzmem                0660   root       drmrpc
 
-#hang_detect
-/dev/RT_Monitor         0600   system  system
-/dev/kick_powerkey      0600   system  system
+#touch
+/dev/touch              0660   root       system
+/dev/hotknot             0660    root system
+
+#powerkey monitor hang
+/dev/kick_powerkey        0600   system     system

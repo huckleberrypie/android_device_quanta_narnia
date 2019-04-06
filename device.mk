@@ -115,6 +115,8 @@ PRODUCT_COPY_FILES += \
 
 # Audio
 PRODUCT_PACKAGES += \
+	libblisrc \
+	libblisrc32 \
 	audio.a2dp.default
     
 # Bluetooth
@@ -141,7 +143,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
 	$(LOCAL_KERNEL):kernel
 
-PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
+#PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
+PRODUCT_BUILD_PROP_OVERRIDES += \
+    PRODUCT_MODEL="EPICv2" \
+    TARGET_DEVICE="UYT2"
 
 # call dalvik heap config
 $(call inherit-product, frameworks/native/build/tablet-7in-hdpi-1024-dalvik-heap.mk)

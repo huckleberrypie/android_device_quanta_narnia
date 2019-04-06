@@ -27,6 +27,10 @@ TARGET_BOOTLOADER_BOARD_NAME := narnia
 BOARD_KERNEL_CMDLINE := 
 BOARD_KERNEL_BASE := 0x10000000
 BOARD_KERNEL_PAGESIZE := 2048
+BOARD_CUSTOM_BOOTIMG_MK := device/quanta/narnia/mkbootimg.mk
+
+BOARD_MKBOOTIMG_ARGS := --base 10000000 --pagesize 2048 --kernel_offset 00008000 --ramdisk_offset 01000000 --tags_offset 00000100
+BOARD_HAS_NO_SELECT_BUTTON := true
 
 # fix this up by examining /proc/mtd on a running device
 BOARD_BOOTIMAGE_PARTITION_SIZE := 16777216
@@ -114,6 +118,3 @@ TARGET_LDPRELOAD += libxlog.so
 # SELinux
 BOARD_SEPOLICY_DIRS := \
        $(DEVICE_DIR)/sepolicy
-
-BOARD_MKBOOTIMG_ARGS := --base 10000000 --pagesize 2048 --kernel_offset 00008000 --ramdisk_offset 01000000 --tags_offset 00000100
-BOARD_HAS_NO_SELECT_BUTTON := true

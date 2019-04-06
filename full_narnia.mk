@@ -10,33 +10,8 @@ $(call inherit-product, device/common/gps/gps_us_supl.mk)
 
 PRODUCT_CHARACTERISTICS := tablet
 
-# init
-PRODUCT_COPY_FILES += \
-    $(DEVICE_DIR)/ramdisk/init.mt8127.rc:root/init.mt8127.rc \
-    $(DEVICE_DIR)/ramdisk/init.mt8127.power.rc:root/init.mt8127.power.rc \
-    $(DEVICE_DIR)/ramdisk/init.mt8127.usb.rc:root/init.mt8127.usb.rc \
-    $(DEVICE_DIR)/ramdisk/init.aee.rc:root/init.aee.rc \
-    $(DEVICE_DIR)/ramdisk/init.ssd.rc:root/init.ssd.rc \
-    $(DEVICE_DIR)/ramdisk/init.project.rc:root/init.project.rc \
-    $(DEVICE_DIR)/ramdisk/init.charging.rc:root/init.charging.rc \
-    $(DEVICE_DIR)/ramdisk/ueventd.rc:root/ueventd.rc \
-    $(DEVICE_DIR)/ramdisk/ueventd.mt8127.rc:root/ueventd.mt8127.rc \
-    $(DEVICE_DIR)/ramdisk/factory_init.project.rc:root/factory_init.project.rc \
-    $(DEVICE_DIR)/ramdisk/meta_init.rc:root/meta_init.rc \
-    $(DEVICE_DIR)/ramdisk/meta_init.project.rc:root/meta_init.project.rc \
-    $(DEVICE_DIR)/ramdisk/factory_init.rc:root/factory_init.rc \
-    $(DEVICE_DIR)/ramdisk/auto_shutdown.sh:root/auto_shutdown.sh \
-    $(DEVICE_DIR)/ramdisk/enableswap.sh:root/enableswap.sh
-#    $(DEVICE_DIR)/ramdisk/init.environ.rc:root/init.environ.rc \
-
-# fstab
-PRODUCT_COPY_FILES += \
-    $(DEVICE_DIR)/ramdisk/fstab:root/fstab \
-    $(DEVICE_DIR)/ramdisk/fstab.mt8127:root/fstab.mt8127
-
-# sh	# Is there an other way to avoid "- exec '/system/bin/sh' failed: No such file or directory (2) -" ?
-PRODUCT_COPY_FILES += \
-    $(DEVICE_DIR)/ramdisk/system/bin/sh:root/system/bin/sh
+# ramdisk
+PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(LOCAL_PATH)/ramdisk,root)
 
 # libxlog
 PRODUCT_PACKAGES += \

@@ -1,4 +1,4 @@
-OVERLAY_BIN := device/lenovo/Tab2A710F/overlay-binaries
+OVERLAY_BIN := device/quanta/narnia/overlay-binaries
 
 # install-recovery.sh used to initialise init.d support	
 #PRODUCT_COPY_FILES += \
