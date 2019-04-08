@@ -11,7 +11,21 @@ $(call inherit-product, device/common/gps/gps_us_supl.mk)
 PRODUCT_CHARACTERISTICS := tablet
 
 # ramdisk
-PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(LOCAL_PATH)/ramdisk,root)
+#PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(LOCAL_PATH)/ramdisk,root)
+PRODUCT_COPY_FILES += \
+    $(DEVICE_DIR)/ramdisk/init.charging.rc:root/init.charging.rc \
+    $(DEVICE_DIR)/ramdisk/init.mt8127.rc:root/init.mt8127.rc \
+    $(DEVICE_DIR)/ramdisk/init.mt8127usb.rc:root/init.mt8127usb.rc \
+    $(DEVICE_DIR)/ramdisk/init.project.rc:root/init.project.rc \
+    $(DEVICE_DIR)/ramdisk/ueventd.mt8127.rc:root/ueventd.mt8127.rc \
+
+# fstab
+PRODUCT_COPY_FILES += \
+    $(DEVICE_DIR)/ramdisk/fstab.mt8127:root/fstab.mt8127
+
+# sh	# Is there an other way to avoid "- exec '/system/bin/sh' failed: No such file or directory (2) -" ?
+PRODUCT_COPY_FILES += \
+    $(DEVICE_DIR)/ramdisk/system/bin/sh:root/system/bin/sh
 
 # libxlog
 PRODUCT_PACKAGES += \
