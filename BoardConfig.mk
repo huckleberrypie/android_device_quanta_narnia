@@ -29,7 +29,7 @@ BOARD_KERNEL_BASE := 0x10000000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_CUSTOM_BOOTIMG_MK := device/quanta/narnia/mkbootimg.mk
 
-BOARD_MKBOOTIMG_ARGS := --base 10000000 --pagesize 2048 --kernel_offset 00008000 --ramdisk_offset 01000000 --tags_offset 00000100
+BOARD_MKBOOTIMG_ARGS := --base 10000000 --pagesize 2048 --kernel_offset 00008000 --ramdisk_offset 01000000 --tags_offset 00000100 --cmdline "androidboot.selinux=permissive"
 BOARD_HAS_NO_SELECT_BUTTON := true
 
 # fix this up by examining /proc/mtd on a running device
