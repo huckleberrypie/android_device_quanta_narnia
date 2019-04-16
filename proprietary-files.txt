@@ -69,6 +69,7 @@ system/lib/libcamdrv.so
 system/lib/libcamera_client_mtk.so
 system/lib/libcameraanalyzer.so
 system/lib/libcameracustom.so
+system/lib/libcorkscrew.so
 system/lib/libcustom_nvram.so
 system/lib/libcvsd_mtk.so
 system/lib/libdpframework.so
