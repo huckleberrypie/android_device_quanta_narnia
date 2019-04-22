@@ -24,12 +24,12 @@ ARCH_ARM_HAVE_NEON := true
 
 TARGET_BOOTLOADER_BOARD_NAME := narnia
 
-BOARD_KERNEL_CMDLINE := 
+BOARD_KERNEL_CMDLINE := enforcing=0 androidboot.selinux=permissive
 BOARD_KERNEL_BASE := 0x10000000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_CUSTOM_BOOTIMG_MK := device/quanta/narnia/mkbootimg.mk
 
-BOARD_MKBOOTIMG_ARGS := --base 10000000 --pagesize 2048 --kernel_offset 00008000 --ramdisk_offset 01000000 --tags_offset 00000100 --cmdline "androidboot.selinux=permissive"
+BOARD_MKBOOTIMG_ARGS := --cmdline "$(BOARD_KERNEL_CMDLINE)" --base 10000000 --pagesize 2048 --kernel_offset 00008000 --ramdisk_offset 01000000 --tags_offset 00000100
 BOARD_HAS_NO_SELECT_BUTTON := true
 
 # fix this up by examining /proc/mtd on a running device
@@ -72,6 +72,7 @@ COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=60
 COMMON_GLOBAL_CFLAGS += -DMTK_HARDWARE
 COMMON_GLOBAL_CFLAGS += -DADD_LEGACY_ACQUIRE_BUFFER_SYMBOL
 COMMON_GLOBAL_CFLAGS += -DNO_SECURE_DISCARD
+COMMON_GLOBAL_CFLAGS += -DDISABLE_HW_ID_MATCH_CHECK
 
 # Graphics
 USE_OPENGL_RENDERER := true
@@ -82,6 +83,15 @@ TARGET_USES_ION := true
 TARGET_DISPLAY_USE_RETIRE_FENCE := true
 MAX_EGL_CACHE_KEY_SIZE := 12*1024
 MAX_EGL_CACHE_SIZE := 1024*1024
+BOARD_EGL_NEEDS_HANDLE_VALUE := true
+TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
+BOARD_EGL_WORKAROUND_BUG_10194508 := true
+BOARD_NEEDS_OLD_HWC_API := true
+TARGET_ENABLE_NON_PIE_SUPPORT := true
+BOARD_EGL_NEEDS_LEGACY_FB := true
+
+TARGET_HAS_LEGACY_CAMERA_HAL1 := true
+TARGET_USES_MEDIA_EXTENSIONS := true
 
 # Surfaceflinger optimization for VD surfaces
 TARGET_FORCE_HWC_FOR_VIRTUAL_DISPLAYS := true
@@ -118,3 +128,11 @@ TARGET_LDPRELOAD += libxlog.so
 # SELinux
 BOARD_SEPOLICY_DIRS := \
        $(DEVICE_DIR)/sepolicy
+
+BOARD_SEPOLICY_UNION += \
+    file_contexts \
+    service_contexts \
+    service.te \
+    device.te \
+    servicemanager.te \
+    surfaceflinger.te

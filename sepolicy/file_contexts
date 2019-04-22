@@ -1,0 +1,15 @@
+##########################
+# Devices
+#
+/dev/trustzone u:object_r:mtee_device:s0
+/dev/mali(/.*)? u:object_r:mali_device:s0
+/dev/mtkfb_vsync(/.*)? u:object_r:mtkfb_vsync_device:s0
+/dev/sw_sync(/.*)? u:object_r:sw_sync_device:s0
+
+
+#/dev/block/mmcblk0 u:object_r:mmcblk0_block_device:s0
+#/dev/block/mt_ftl_blk0_0   u:object_r:system_block_device:s0
+#/dev/block/mt_ftl_blk1_0   u:object_r:userdata_block_device:s0
+
+#subtitle framework notify pixel data to Gallery apk  via /mnt/subt/xx.tmp file
+#/mnt/subt(/.*)? u:object_r:subtitle_data_file:s0
