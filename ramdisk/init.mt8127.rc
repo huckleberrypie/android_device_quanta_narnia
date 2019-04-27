@@ -87,6 +87,70 @@ on init
     chmod 0660 /dev/graphics/fb0
     chown system graphics /dev/graphics/fb0
 
+
+# PixNDom fix kanged with his blessing
+    # 16/01/2016 : commented
+    #chmod 0660 /dev/cpuctl
+
+    chmod 0666 /dev/mali
+    chown system graphics /dev/mali
+
+    mknod /dev/stpwmt c 190 0;
+    chmod 0660 /dev/stpwmt
+
+    # 16/01/2016 : folowing line does not seem to be applied ? 
+    chown system system /dev/stpwmt
+
+
+# 16/01/2016 - ok, but /dev/stp*
+    chmod 0666 /dev/cpuctl
+
+    chmod 0660 /dev/touch
+    chown root system /dev/touch
+
+    chmod 0600 /dev/RT_Monitor
+    chown system system /dev/RT_Monitor
+
+    #chmod 0600 /dev/btif # dejà ok, I've just been in this place before
+    chown system system /dev/btif
+
+    chmod 0660 /dev/mt6605
+    chown system system /dev/mt6605
+
+    chmod 0660 /dev/nvram
+    chown root system /dev/nvram
+
+    chmod 0660 /dev/stpgps
+    chown gps gps /dev/stpgps
+
+    chmod 0660 /dev/stpbt
+    chown bluetooth radio /dev/stpbt
+
+    chmod 0660 /dev/wmtWifi
+    chown system system /dev/wmtWifi
+
+    chmod 0660 /dev/pro_info
+    chown root system /dev/pro_info
+
+    chmod 0660 /dev/dkb
+    chown root system /dev/dkb
+
+    chmod 0660 /dev/kb
+    chown root system /dev/kb
+
+    chmod 0640 /dev/bootimg
+    chown root system /dev/bootimg
+
+    chmod 0600 /dev/mtgpio
+    chown radio root /dev/mtgpio
+# / 16/01/2016
+
+# FM Radio device node
+    chmod 0660 /dev/fm
+    chown system media /dev/fm
+
+# PixNDom fix end ##################
+
 #HWComposer Vsync
     chmod 0660 /dev/mtkfb_vsync
     chown system graphics /dev/mtkfb_vsync

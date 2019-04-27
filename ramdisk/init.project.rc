@@ -41,11 +41,11 @@ on post-fs-data
     chown system system /dev/wmtWifi
 
 # BT
-    chmod 0660 /dev/stpbt
-    chown bluetooth radio /dev/stpbt
+#    chmod 0660 /dev/stpbt
+#    chown bluetooth radio /dev/stpbt
 
 # GPS
-    chown gps gps /dev/stpgps
+#    chown gps gps /dev/stpgps
     chown gps gps /sys/class/gpsdrv/gps/pwrctl
     chown gps gps /sys/class/gpsdrv/gps/suspend
     chown gps gps /sys/class/gpsdrv/gps/state
