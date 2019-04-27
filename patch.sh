@@ -1,5 +1,5 @@
  #!/bin/bash
  cd ../../..
- cd frameworks/native
- patch -p1 < ../../device/quanta/narnia/patches/frameworks_native.patch
- echo PATCHED !
+ cd system/core/libutils
+ patch -p1 < ../../device/quanta/narnia/patches/system_core.patch
+ echo This is ugly.

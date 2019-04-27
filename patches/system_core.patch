@@ -1,0 +1,57 @@
+From 3f7e7e9bd3e3a4ce6e9d33f591e0038d8f611330 Mon Sep 17 00:00:00 2001
+From: ferhung-mtk <ferhung27@gmail.com>
+Date: Sun, 17 Apr 2016 17:08:19 +0800
+Subject: [PATCH 04/10] MediaTek: Add mediatek hack for EGL.
+
+Signed-off-by: sub77 <sub77@ymail.com>
+---
+ libutils/Android.mk        |  4 ++++
+ libutils/MediatekHacks.cpp | 21 +++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
+ create mode 100644 libutils/MediatekHacks.cpp
+
+diff --git a/libutils/Android.mk b/libutils/Android.mk
+index 23a5c59..040586a 100644
+--- a/libutils/Android.mk
++++ b/libutils/Android.mk
+@@ -83,6 +83,10 @@ LOCAL_CFLAGS += -DALIGN_DOUBLE
+ endif
+ LOCAL_CFLAGS += -Werror
+ 
++ifeq ($(BOARD_HAS_MTK_HARDWARE),true)  
++LOCAL_SRC_FILES += MediatekHacks.cpp  
++endif  
++
+ LOCAL_STATIC_LIBRARIES := \
+ 	libcutils \
+ 	libc
+diff --git a/libutils/MediatekHacks.cpp b/libutils/MediatekHacks.cpp
+new file mode 100644
+index 0000000..c010831
+--- /dev/null
++++ b/libutils/MediatekHacks.cpp
+@@ -0,0 +1,21 @@
++extern "C" {
++ void _ZN7android11IDumpTunnel11asInterfaceERKNS_2spINS_7IBinderEEE(){}
++ void _ZN7android11BufferQueueC1ERKNS_2spINS_19IGraphicBufferAllocEEE(){}
++ void _ZN7android22IGraphicBufferConsumer10BufferItemC1Ev(){}
++ void _ZN7android9CallStackC1EPKci(char const*, int);
++ void _ZN7android9CallStack6updateEii(int, int);
++
++ void _ZN7android9CallStackC1EPKcii(char const* logtag, int ignoreDepth, int maxDepth){
++  maxDepth = maxDepth-1;
++  maxDepth = maxDepth+1;
++  _ZN7android9CallStackC1EPKci(logtag, ignoreDepth);
++  
++ }
++
++ void _ZN7android9CallStack6updateEiii(int ignoreDepth, int maxDepth, int tid){
++  maxDepth = maxDepth-1;
++  maxDepth = maxDepth+1; 
++  _ZN7android9CallStack6updateEii(ignoreDepth, tid);
++ }
++}
++
+-- 
+2.9.3
+
