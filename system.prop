@@ -28,6 +28,8 @@ wifi.tethering.interface=ap0
 #
 #wifi.direct.interface=p2p0
 
+#Orientation fix unless you're Australian
+ro.sf.hwrotation=180
 
 # Switching Menu of Mass storage and MTP
 ro.sys.usb.storage.type=mtp,mass_storage

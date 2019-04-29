@@ -85,7 +85,7 @@ MAX_EGL_CACHE_KEY_SIZE := 12*1024
 MAX_EGL_CACHE_SIZE := 1024*1024
 BOARD_EGL_NEEDS_HANDLE_VALUE := true
 #Same as what I did with TWRP; LCD is flipped for some reason
-BOARD_HAS_FLIPPED_SCREEN := true
+#BOARD_HAS_FLIPPED_SCREEN := true
 
 #Don't need these flags for now.
 #TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true

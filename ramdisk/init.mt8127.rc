@@ -4,31 +4,25 @@ import init.project.rc
 import init.connectivity.rc
 import init.charging.rc
 import init.mt8127.usb.rc
+import init.aee.rc
 import init.ssd.rc
 import init.no_ssd.rc
 import init.ssd_nomuser.rc
 import init.mt8127.power.rc
    
 on init
-#	export LD_PRELOAD "libxlog.so"
-#	export LD_SHIM_LIBS /system/libdpframework.so|libxlog.so:/system/lib/egl/libEGL_mali.so|libxlog.so
     export USBOTG_STORAGE /storage/usbotg
     mount tmpfs tmpfs /mnt/media_rw/ mode=0755,uid=1000,gid=1000
     mkdir /mnt/media_rw/usbotg 0700 media_rw media_rw
     mkdir /storage/usbotg 0700 root root
     mount tmpfs tmpfs /storage/usbotg mode=0755,uid=1000,gid=1000	
 
-   # symlink /sdcard /storage/sdcard0
-   # symlink /storage/usbdisk /mnt/usbdisk
-
-   # export EXTERNAL_STORAGE /sdcard
-
-#Temp permissive mode until I give SELinux what it *really* wants :P
-    setenforce 0
-
 # Backward compatibility
     symlink /system/etc /etc
     symlink /sys/kernel/debug /d
+
+# Set SELinux enforicng mode to 0
+    setenforce 0
 
 # Right now vendor lives on the same filesystem as system,
 # but someday that may change.
@@ -88,11 +82,12 @@ on init
     chmod 0644 /dev/xt_qtaguid
 
 #HWComposer fb0
-    chmod 0660 /dev/graphics/fb0
+    chmod 0666 /dev/graphics/fb0
     chown system graphics /dev/graphics/fb0
 
 
-# PixNDom fix kanged with his blessing
+
+# PixNDom fix
     # 16/01/2016 : commented
     #chmod 0660 /dev/cpuctl
 
@@ -115,7 +110,7 @@ on init
     chmod 0600 /dev/RT_Monitor
     chown system system /dev/RT_Monitor
 
-    #chmod 0600 /dev/btif # dejà ok, I've just been in this place before
+    #chmod 0600 /dev/btif # dejà ok
     chown system system /dev/btif
 
     chmod 0660 /dev/mt6605
@@ -156,16 +151,15 @@ on init
 # PixNDom fix end ##################
 
 #HWComposer Vsync
-    chmod 0660 /dev/mtkfb_vsync
+    chmod 0666 /dev/mtkfb_vsync
     chown system graphics /dev/mtkfb_vsync
 
-
 #HWComposer fence
-    chmod 0660 /dev/sw_sync
+    chmod 0666 /dev/sw_sync
     chown system graphics /dev/sw_sync
 
 # Change ION driver permission
-    chmod 0644 /dev/ion
+    chmod 0666 /dev/ion
 
 # Change BWC permission
     chmod 0664 /sys/bus/platform/drivers/mem_bw_ctrl/concurrency_scenario
@@ -184,10 +178,6 @@ on init
 # Change SMI mtk_sched permission
     chmod 0660 /dev/mtk_sched
     chown system media /dev/mtk_sched
-
-#BT SCO CVSD
-    chmod 0660 /dev/ebc
-    chown system media /dev/ebc
 
 # Change DISP permission
     chmod 0666 /dev/mtk_disp
@@ -227,15 +217,19 @@ on init
     chmod 0660 /dev/mt_otg_test
     
 # Enable AAL
-    #setprop ro.mediatek.aal 1
+    setprop ro.mediatek.aal 1
 
     # mount debugfs for ftrace
     mount debugfs none /sys/kernel/debug   
     
  # change owner
+    chown system system /proc/bootprof
     chown root system /proc/mtprof/cputime
     chown root system /proc/mtprof/reboot_pid
 	
+#For Runin Test. Added by wangfeng merge from apllo
+    chown system system /sys/devices/platform/battery/Runin_test
+
 on boot
 # start sensor services
 # start akmd8963 
@@ -247,9 +241,15 @@ start NvRAMAgent
     chmod 0660 /sys/devices/system/cpu/cpufreq/hotplug/cpu_num_base
 
 on fs
+    
+#    export EXTERNAL_STORAGE /mnt/sdcard
+#    mkdir /mnt/sdcard 0000 system system
+#    symlink /mnt/sdcard /sdcard
+
 
 # mount mtd partitions
     # Mount /system rw first to give the filesystem a chance to save a checkpoint
+    #write /proc/bootprof "INIT:NAND:Mount_START"
     #mount yaffs2 mtd@system /system
 
 # via: set ril and pppd
@@ -264,15 +264,26 @@ on fs
     #mount yaffs2 mtd@system /system ro remount
     #mount yaffs2 mtd@userdata /data nosuid nodev
     #mount yaffs2 mtd@cache /cache nosuid nodev
+    #write /proc/bootprof "INIT:NAND:Mount_END"
 
 #on fs_property:ro.mount.fs=EXT4
+    write /proc/bootprof "INIT:eMMC:Mount_START"
     mount_all /fstab.mt8127
-	setprop ro.crypto.fuse_sdcard true
-    #mount iso9660 loop@/system/etc/iAmCdRom.iso /mnt/cd-rom ro
-    
-    write /sys/class/misc/tp_cfg/data_is_mount 1
+    write /proc/bootprof "INIT:eMMC:Mount_END"
+
+# PixNDom Don't mount Lenovo CDRom image
+#    mount iso9660 loop@/system/etc/iAmCdRom.iso /mnt/cd-rom ro
+# PixNDom end
+
     #change partition permission
     exec /system/etc/partition_permission.sh 
+    
+# RGX init
+service pvrsrvctl /system/vendor/bin/pvrsrvctl --start 
+    class core
+    user root
+    group root
+    oneshot
 
 on post-fs-data
     mkdir /data/nvram 2770 root system
@@ -299,8 +310,6 @@ on post-fs-data
     mkdir /data/misc/ppp 0770 bluetooth net_bt
     # bluetooth
     mkdir /data/@btmtk 0770 bluetooth net_bt
-    chown bluetooth bluetooth /data/@btmtk/host_cache
-    chown bluetooth bluetooth /data/@btmtk/dev_cache
     chown bluetooth bluetooth /dev/hid-keyboard
     chmod 0660 /dev/hid-keyboard
 
@@ -442,7 +451,6 @@ on post-fs-data
 
     # Recycle stuffs
     exec /system/bin/rm -f /cache/.ipoh.img
-	rm /data/logcat.txt
 
 on property:vold.decrypt=trigger_restart_framework
     start msensord
@@ -451,9 +459,14 @@ on property:vold.decrypt=trigger_restart_framework
 
 #
 #sensor service (begin)
-service msensord /system/bin/msensord
+#service msensord /system/bin/msensord
+#    class main
+#    oneshot
+
+#
+#drm operation server
+service kisd /system/bin/kisd
     class main
-    oneshot
 
 service nvram_daemon /system/bin/nvram_daemon
     class main
@@ -573,6 +586,39 @@ service dhcp6c_PD /system/bin/dhcp6c -c "/etc/wide-dhcpv6/dhcp6cPD.conf" -Df
 #sensor service (end)
 #    
 
+#thermal service
+service thermal_manager /system/bin/thermal_manager
+    class main
+    user root
+    oneshot
+
+service thermal /system/bin/thermal
+    class main
+    user system
+    group system
+
+service thermald /system/bin/thermald
+    class main
+    user system
+    group system
+
+service aal /system/bin/aal
+    class core
+    user system
+    group system graphics radio
+    
+service pq /system/bin/pq
+    class main
+    user system
+    group system graphics
+    oneshot
+
+# FOTA upgrade
+service rbfota /system/bin/fota1
+    class main
+    disabled
+    oneshot
+
 #
 # MT6620 related services (Begin)
 #
@@ -635,12 +681,30 @@ service netdiag /system/bin/netdiag
 # MT6620 related services (End)
 #
 
+## mtk printk uart controller
+on property:persist.uartconsole.enable=1
+    write /proc/mtprintk 1
+
+# Update the second boot logo
+service bootlogoupdater /system/bin/boot_logo_updater
+	class core
+	oneshot
+
+service auto_shutdown /system/bin/sh /auto_shutdown.sh
+	oneshot
+	disabled
+
 service audio-daemon /system/bin/audiocmdservice_atci
     class main
     socket atci-audio stream 660 media system
     user root
     group media system sdcard_rw
     disabled
+    oneshot
+
+# OTA update backup partition
+service flash_tee2 /system/etc/install-tee2.sh
+    class main
     oneshot
 
 # GuiExt Server init
@@ -655,16 +719,75 @@ service guiext-server /system/bin/guiext-server
     chmod 660 /dev/ttyGS1
     chown system /dev/ttyGS1
 
-# BT relayer mode used VCOM
-    chmod 0660 /dev/ttyGS2
-    chown bluetooth radio /dev/ttyGS2
+service atci_service /system/bin/atci_service
+    class core
+    socket atci-service stream 660 radio system
+    socket atci-serv-fw stream 660 radio system
+    user root
+    disabled
+    group radio system
+    oneshot
 
+service atcid-daemon-u /system/bin/atcid
+    class main
+    user system
+    group radio system media
+    disabled
+    oneshot
 
+service atcid-daemon-e /system/bin/atcid
+    class core
+    user root
+    group radio system
+    disabled
+    oneshot
 
+service sbchk /system/bin/sbchk 
+    class main
+    user system
+    group system
+    oneshot
 
 on property:init.svc.servicemanager=restarting
+	restart aal
 	restart pq
+
+on property:init.svc.bootanim=running
+	write /proc/bootprof "BOOT_Animation:START"
+
+on property:init.svc.bootanim=stopped
+	write /proc/bootprof "BOOT_Animation:END"
+	start auto_shutdown
+
+on property:ro.build.type=eng
+    start atci_service
+    start atcid-daemon-e
     
+#emsvr service (start)
+#
+on property:ro.build.type=eng
+    start emsvr
+
+on property:ro.build.type=user
+    start emsvr_user
+
+on property:ro.build.type=userdebug
+    start emsvr_user
+
+service emsvr_user /system/bin/em_svr
+    disabled
+    user system
+    group system radio diag
+
+service emsvr /system/bin/em_svr
+    disabled
+    user root
+
+#
+#emsvr service (end)
+#
+
+
 #
 #ape codec service
 #
@@ -678,7 +801,7 @@ service MtkCodecService /system/bin/MtkCodecService
 service mnld /system/xbin/mnld
     class main
     user gps
-    group gps inet misc sdcard_rw sdcard_r media_rw system
+    group system gps inet misc sdcard_rw sdcard_r media_rw
     socket mnld stream 660 gps system
 
 on boot
@@ -720,25 +843,69 @@ chown root /system/bin/pppd
 chmod 4755 /system/bin/pppd
 chown root /system/bin/chat
 chmod 4755 /system/bin/chat
-#[BUGFIX]-ADD-BEGIN by SCDTABLET.(bo.yang@jrdcom.com),03/05/2015,1006752
-chmod 0660 /dev/ebc
-chown root audio /dev/ebc
-#[BUGFIX]-ADD-END by SCDTABLET.(bo.yang@jrdcom.com),05/05/2015,1006752
 
 chmod 0664 /sys/class/leds/lcd-backlight/brightness
 chown system system /sys/class/leds/red/trigger
 chown system system /sys/class/leds/green/trigger
 chown system system /sys/class/leds/blue/trigger
 #
+#ril-daemon (begin)
+#
+service ril-3gddaemon /system/bin/rild_dongle 
+    class main
+    socket rild-dongle stream 660 root radio
+    socket rild-dongle-debug stream 660 radio radio
+    user root
+    group radio cache inet misc audio log
+    disabled
+
+#
+#ril-daemon (end)
+#
+
+#
+#usbdongled(begin)
+#
+service usbdongled /system/bin/dongled
+    class main
+	user root
+	group radio cache inet misc
+	enabled
+	
+#
+#usbdongled(end)
+#
+
+#
+# add the service for call pppd(begin)
+#
+service zpppd_gprs /system/bin/init.gprs-pppd
+    user root
+	group radio cache inet misc
+	disabled
+	oneshot
+#
+# add the service for call pppd(end)
+#
+   
+# 
+# ipo
+#
+service ipod /system/bin/ipod
+    user root
+    group root
+    disabled
+
+#
 # swap
 #
 service enableswap /system/bin/sh /enableswap.sh
     class core 
     oneshot
     seclabel u:r:enableswap:s0
-# swap
-#
-service enableswap /system/bin/sh /enableswap.sh
-    class core 
-    oneshot
-    seclabel u:r:enableswap:s0
+
+#monitor battery status
+service batterywarning /system/bin/batterywarning
+    class main
+    user shell
+    group shell
