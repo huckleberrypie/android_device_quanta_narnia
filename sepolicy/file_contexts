@@ -13,3 +13,6 @@
 
 #subtitle framework notify pixel data to Gallery apk  via /mnt/subt/xx.tmp file
 #/mnt/subt(/.*)? u:object_r:subtitle_data_file:s0
+
+# Wifi device
+/dev/wmtWifi u:object_r:wmtWifi_device:s0

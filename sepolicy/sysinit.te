@@ -1,0 +1,5 @@
+allow sysinit self:capability fsetid;
+
+allow sysinit system_data_file:dir { read open setattr };
+
+allow sysinit system_data_file:file { open setattr };

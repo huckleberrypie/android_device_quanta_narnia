@@ -1,0 +1,4 @@
+# Give untrusted apps access to the Mali GPU
+# Not sure if that's good security-wise but I'll put this for now just in case
+
+allow untrusted_app mali_device:chr_file { read write getattr open ioctl };

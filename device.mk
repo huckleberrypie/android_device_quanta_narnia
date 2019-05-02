@@ -14,7 +14,7 @@ $(call inherit-product-if-exists, $(VENDOR_DIR)/narnia-vendor.mk)
 DEVICE_PACKAGE_OVERLAYS += $(DEVICE_DIR)/overlay
 
 # Overlay Binaries
-#$(call inherit-product, $(DEVICE_DIR)/overlay-binaries/overlay-binaries.mk)
+$(call inherit-product, $(DEVICE_DIR)/overlay-binaries/overlay-binaries.mk)
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
