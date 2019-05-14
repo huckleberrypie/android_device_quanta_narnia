@@ -3,7 +3,7 @@
 # purposes.
 #
 # Allow init to setenforce 0
-allow init kernel:security setenforce;
+#allow init kernel:security setenforce;
 
 allow init default_android_service:service_manager add;
 

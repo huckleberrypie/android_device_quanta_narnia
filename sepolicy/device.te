@@ -15,6 +15,7 @@ type mali_device, dev_type, mlstrustedobject;
 type mtkfb_vsync_device, dev_type;
 type sw_sync_device, dev_type;
 type mtee_device, dev_type;
+type mtk_disp_device, dev_type;
 
 # Sensors
 type als_ps_device, dev_type;
