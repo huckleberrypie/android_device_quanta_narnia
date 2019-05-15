@@ -1,1 +1,2 @@
 allow kernel system_file:file execute_no_trans;
+allow kernel aee_core_forwarder_exec:file { read execute open execute_no_trans };

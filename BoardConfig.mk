@@ -89,7 +89,7 @@ BOARD_EGL_NEEDS_HANDLE_VALUE := true
 #BOARD_HAS_FLIPPED_SCREEN := true
 
 BOARD_EGL_NEEDS_FNW := true
-BOARD_EGL_SKIP_FIRST_DEQUEUE := true
+#BOARD_EGL_SKIP_FIRST_DEQUEUE := true
 BOARD_EGL_NEEDS_LEGACY_FB := true
 BOARD_NEEDS_OLD_HWC_API := true
 
@@ -141,6 +141,7 @@ BOARD_SEPOLICY_DIRS := \
        $(DEVICE_DIR)/sepolicy
 
 BOARD_SEPOLICY_UNION += \
+    aee_core_forwarder.te \
     attributes \
     file_contexts \
     service_contexts \
