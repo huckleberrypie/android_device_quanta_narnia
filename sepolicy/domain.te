@@ -201,7 +201,7 @@ neverallow { domain -init } kernel:security load_policy;
 
 # Only init and the system_server can set selinux.reload_policy 1
 # to trigger a policy reload.
-neverallow { domain -init -system_server } security_prop:property_service set;
+#neverallow { domain -init -system_server } security_prop:property_service set;
 
 # Only init and system_server can write to /data/security, where runtime
 # policy updates live.
