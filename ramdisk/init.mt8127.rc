@@ -22,7 +22,7 @@ on init
     symlink /sys/kernel/debug /d
 
 # Set SELinux enforicng mode to 0
-    # setenforce 0
+    setenforce 0
 
 # Right now vendor lives on the same filesystem as system,
 # but someday that may change.

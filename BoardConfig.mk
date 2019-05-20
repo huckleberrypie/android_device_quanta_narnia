@@ -24,8 +24,8 @@ ARCH_ARM_HAVE_NEON := true
 
 TARGET_BOOTLOADER_BOARD_NAME := narnia
 
-#BOARD_KERNEL_CMDLINE := enforcing=0 androidboot.selinux=permissive
-BOARD_KERNEL_CMDLINE := 
+BOARD_KERNEL_CMDLINE := enforcing=0 androidboot.selinux=permissive
+#BOARD_KERNEL_CMDLINE := 
 BOARD_KERNEL_BASE := 0x10000000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_CUSTOM_BOOTIMG_MK := device/quanta/narnia/mkbootimg.mk
@@ -59,7 +59,7 @@ BLOCK_BASED_OTA :=false
 # to be used with hardware/mediatek repo
 BOARD_HAS_MTK := true
 MTK_HWC_CHIP := mt8127
-MTK_HWC_SUPPORT := true
+MTK_HWC_SUPPORT := false
 MTK_WFD_SUPPORT := true
 MTK_PQ_SUPPORT := true
 MTK_ION_SUPPORT := true
@@ -88,21 +88,18 @@ BOARD_EGL_NEEDS_HANDLE_VALUE := true
 #Same as what I did with TWRP; LCD is flipped for some reason
 #BOARD_HAS_FLIPPED_SCREEN := true
 
-BOARD_EGL_NEEDS_FNW := true
+#BOARD_EGL_NEEDS_FNW := true
 #BOARD_EGL_SKIP_FIRST_DEQUEUE := true
-BOARD_EGL_NEEDS_LEGACY_FB := true
-BOARD_NEEDS_OLD_HWC_API := true
+#BOARD_EGL_NEEDS_LEGACY_FB := true
+#BOARD_NEEDS_OLD_HWC_API := true
 
 #Don't need these flags for now.
-#TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
+TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
 #BOARD_EGL_WORKAROUND_BUG_10194508 := true
-#BOARD_NEEDS_OLD_HWC_API := true
 #TARGET_ENABLE_NON_PIE_SUPPORT := true
-#BOARD_EGL_NEEDS_LEGACY_FB := true
-#BOARD_EGL_SKIP_FIRST_DEQUEUE := true
 
 TARGET_HAS_LEGACY_CAMERA_HAL1 := true
-#TARGET_USES_MEDIA_EXTENSIONS := true
+TARGET_USES_MEDIA_EXTENSIONS := true
 
 # Surfaceflinger optimization for VD surfaces
 TARGET_FORCE_HWC_FOR_VIRTUAL_DISPLAYS := true
@@ -143,13 +140,21 @@ BOARD_SEPOLICY_DIRS := \
 BOARD_SEPOLICY_UNION += \
     aee_core_forwarder.te \
     attributes \
-    file_contexts \
-    service_contexts \
-    service.te \
+    bootanim.te \
     device.te \
+    file_contexts \
     init.te \
+    netd.te \
+    platform_app.te \
+    service.te \
+    service_contexts \
     servicemanager.te \
-    surfaceflinger.te
+    surfaceflinger.te \
+    sysinit.te \
+    system_app.te \
+    system_server.te \
+    untrusted_app.te \
+    zygote.te
 
 BOARD_SEPOLICY_REPLACE += \
     domain.te
