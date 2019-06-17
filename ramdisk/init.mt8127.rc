@@ -21,9 +21,6 @@ on init
     symlink /system/etc /etc
     symlink /sys/kernel/debug /d
 
-# Set SELinux enforicng mode to 0
-    setenforce 0
-
 # Right now vendor lives on the same filesystem as system,
 # but someday that may change.
     symlink /system/vendor /vendor   
@@ -271,7 +268,7 @@ on fs
     mount_all /fstab.mt8127
     write /proc/bootprof "INIT:eMMC:Mount_END"
 
-# PixNDom Don't mount Lenovo CDRom image
+# PixNDom Don't mount quanta CDRom image
 #    mount iso9660 loop@/system/etc/iAmCdRom.iso /mnt/cd-rom ro
 # PixNDom end
 

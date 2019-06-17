@@ -2,7 +2,7 @@ USE_CAMERA_STUB := true
 
 DEVICE_DIR := device/quanta/narnia
 VENDOR_DIR := vendor/quanta/narnia
-#KERNEL_DIR := kernel/quanta/narnia
+KERNEL_DIR := kernel/quanta/narnia
 
 # Additional includes
 TARGET_SPECIFIC_HEADER_PATH := $(DEVICE_DIR)/include
@@ -31,9 +31,9 @@ TARGET_OTA_ASSERT_DEVICE := narnia
 
 BOARD_BOOTIMAGE_PARTITION_SIZE := 16777216          # = 16MB (OK with MTKDroidTools value)
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 16777216		# = 16MB (OK with MTKDroidTools value)
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 3221225472		# = 3 GB  (OK with MTKDroidTools value)
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 10908336128	# = 10 GB on 5,5 GB max  (OK with MTKDroidTools value)
-BOARD_CACHEIMAGE_PARTITION_SIZE := 1073741824		# = 0x07e00000 = 128MB
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1610612736		# = 1,5 GB  (OK with MTKDroidTools value)
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 3221225472	# = 3 GB on 5,5 GB max  (OK with MTKDroidTools value)
+BOARD_CACHEIMAGE_PARTITION_SIZE := 132120576		# = 0x07e00000 = 128MB
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_FLASH_BLOCK_SIZE := 131072
 TARGET_USERIMAGES_USE_EXT4 := true
@@ -44,10 +44,9 @@ TARGET_USERIMAGES_SPARSE_EXT_DISABLED := false
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/mt_usb/musb-hdrc.0.auto/gadget/lun%d/file
 
 # Kernel
-BOARD_MKBOOTIMG_ARGS := --cmdline "$(BOARD_KERNEL_CMDLINE)" --base 10000000 --pagesize 2048 --kernel_offset 00008000 --ramdisk_offset 01000000 --tags_offset 00000100
-BOARD_HAS_NO_SELECT_BUTTON := true
+#BOARD_MKBOOTIMG_ARGS :=
 #BOARD_KERNEL_CMDLINE :=
-BOARD_KERNEL_CMDLINE := enforcing=0 androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE := androidboot.selinux=permissive
 BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_PAGESIZE := 2048
 
@@ -132,24 +131,35 @@ TARGET_LDPRELOAD += libxlog.so
 BOARD_SEPOLICY_DIRS := \
        $(DEVICE_DIR)/sepolicy
 
-BOARD_SEPOLICY_UNION += \
-    aee_core_forwarder.te \
-    attributes \
-    bootanim.te \
-    device.te \
-    file_contexts \
-    init.te \
-    netd.te \
-    platform_app.te \
-    service.te \
-    service_contexts \
-    servicemanager.te \
-    surfaceflinger.te \
-    sysinit.te \
-    system_app.te \
-    system_server.te \
-    untrusted_app.te \
-    zygote.te
+#BOARD_SEPOLICY_UNION := \
+#        device.te \
+#        netd.te \
+#        system.te \
+#        file_contexts
 
-BOARD_SEPOLICY_REPLACE += \
-    domain.te
+
+# test
+# Some flags that may be related to HWC problems. Tried some...
+#
+# from https://github.com/DevUt/android_device_htc_endeavoru/blob/twrp3/BoardConfig.mk
+#BOARD_EGL_WORKAROUND_BUG_10194508 := true
+#TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true  # removed, as seen removed on github, try it later
+#BOARD_EGL_SKIP_FIRST_DEQUEUE := true
+#BOARD_EGL_NEEDS_FNW := true                    # seems old, try it later, may make surfaceflinger fail
+#BOARD_USES_LEGACY_MMAP := true                 # seems old
+#TARGET_NEEDS_NON_PIE_SUPPORT := true           # seems old
+#COMMON_GLOBAL_CFLAGS += -DTARGET_NEEDS_HWC_V0  # not found in source
+#COMMON_GLOBAL_CFLAGS += -DBOARD_CANT_REALLOCATE_OMX_BUFFERS
+
+# from https://github.com/thune-xiaobai/Android_device_ZTE_U950/blob/master/BoardConfig.mk
+#BOARD_NEEDS_OLD_HWC_API := true
+#BOARD_EGL_NEEDS_LEGACY_FB := true
+
+# from https://github.com/CyanogenMod12Y300/android_device_huawei_msm7x27a-common/blob/cm-12.1/BoardConfigCommon.mk
+#TARGET_ENABLE_QC_AV_ENHANCEMENTS := true       # ! No QC hardware
+#TARGET_NO_ADAPTIVE_PLAYBACK := true
+
+# from http://pastebin.com/Vyk35GrL
+#TARGET_DISPLAY_INSECURE_MM_HEAP := true
+
+## /test
