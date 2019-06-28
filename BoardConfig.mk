@@ -8,48 +8,60 @@ VENDOR_DIR := vendor/quanta/narnia
 TARGET_SPECIFIC_HEADER_PATH := $(DEVICE_DIR)/include
 
 # inherit from the proprietary version
--include vendor/quanta/narnia/BoardConfigVendor.mk
+-include $(VENDOR_DIR)/BoardConfigVendor.mk
 
-TARGET_ARCH := arm
-TARGET_NO_BOOTLOADER := true
+# Platform
 TARGET_BOARD_PLATFORM := mt8127
 TARGET_BOARD_PLATFORM_GPU := mali-450mp4
-TARGET_CPU_ABI := armeabi-v7a
-TARGET_CPU_ABI2 := armeabi
+
+# Arch
+TARGET_ARCH := arm
 TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_CPU_VARIANT := cortex-a7
+TARGET_CPU_ABI := armeabi-v7a
+TARGET_CPU_ABI2 := armeabi
 TARGET_CPU_SMP := true
 ARCH_ARM_HAVE_TLS_REGISTER := true
 ARCH_ARM_HAVE_NEON := true
 
+TARGET_NO_BOOTLOADER := true
+BOARD_HAS_NO_SELECT_BUTTON := true
 TARGET_BOOTLOADER_BOARD_NAME := narnia
 
-BOARD_KERNEL_CMDLINE := enforcing=0 androidboot.selinux=permissive
-#BOARD_KERNEL_CMDLINE := 
-BOARD_KERNEL_BASE := 0x10000000
-BOARD_KERNEL_PAGESIZE := 2048
-BOARD_CUSTOM_BOOTIMG_MK := device/quanta/narnia/mkbootimg.mk
-
-BOARD_MKBOOTIMG_ARGS := --cmdline "$(BOARD_KERNEL_CMDLINE)" --base 10000000 --pagesize 2048 --kernel_offset 00008000 --ramdisk_offset 01000000 --tags_offset 00000100
-BOARD_HAS_NO_SELECT_BUTTON := true
-
-# fix this up by examining /proc/mtd on a running device
-BOARD_BOOTIMAGE_PARTITION_SIZE := 16777216
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 16777216
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 3221225472
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 10908336128
-BOARD_CACHEIMAGE_PARTITION_SIZE := 1073741824
+BOARD_BOOTIMAGE_PARTITION_SIZE := 16777216          # = 16MB  (OK with MTKDroidTools value)
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 16777216		# = 16MB  (OK with MTKDroidTools value)
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 3221225472		# = 3 GB  (OK with MTKDroidTools value)
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 10908336128	# = 10 GB (OK with MTKDroidTools value)
+BOARD_CACHEIMAGE_PARTITION_SIZE := 1073741824		# = 0x07e00000 = 128MB
+BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_FLASH_BLOCK_SIZE := 131072
+TARGET_USERIMAGES_USE_EXT4 := true
 
 TARGET_USERIMAGES_SPARSE_EXT_DISABLED := false
-BOARD_HAS_NO_MISC_PARTITION := true
-
-BACKLIGHT_PATH := "/sys/class/leds/lcd-backlight/brightness"
 
 # Vold
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/mt_usb/musb-hdrc.0.auto/gadget/lun%d/file
 
-TARGET_PREBUILT_KERNEL := device/quanta/narnia/kernel
+# Kernel
+BOARD_MKBOOTIMG_ARGS := --cmdline "$(BOARD_KERNEL_CMDLINE)" --base 10000000 --pagesize 2048 --kernel_offset 00008000 --ramdisk_offset 01000000 --tags_offset 00000100
+BOARD_HAS_NO_SELECT_BUTTON := true
+#BOARD_KERNEL_CMDLINE :=
+BOARD_KERNEL_CMDLINE := enforcing=0 androidboot.selinux=permissive
+BOARD_KERNEL_BASE := 0x80000000
+BOARD_KERNEL_PAGESIZE := 2048
+BOARD_CUSTOM_BOOTIMG_MK := device/quanta/narnia/mkbootimg.mk
+
+BUILD_KERNEL_FROM_SOURCE := false
+ifeq ($(BUILD_KERNEL_FROM_SOURCE),true)
+    # build kernel from sources
+    BOARD_USES_MTK_KERNELBUILD := true    # from https://gitlab.com/SaberMod/slim-android-build/blob/d0ea96c4ec309e9361f8da6d12dc6770f04e57f4/core/mtk_utils.mk
+    TARGET_KERNEL_SOURCE := $(KERNEL_DIR)
+    TARGET_KERNEL_CONFIG := bitland8127_tb_l_defconfig
+    #TARGET_KMODULES := true         # is it needed ?
+else
+    # use prebuilt kernel
+    TARGET_PREBUILT_KERNEL := $(DEVICE_DIR)/kernel
+endif
 
 # MTK
 BOARD_HAS_MTK_HARDWARE := true
@@ -59,7 +71,7 @@ BLOCK_BASED_OTA :=false
 # to be used with hardware/mediatek repo
 BOARD_HAS_MTK := true
 MTK_HWC_CHIP := mt8127
-MTK_HWC_SUPPORT := false
+MTK_HWC_SUPPORT := true
 MTK_WFD_SUPPORT := true
 MTK_PQ_SUPPORT := true
 MTK_ION_SUPPORT := true
@@ -73,7 +85,6 @@ COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=60
 COMMON_GLOBAL_CFLAGS += -DMTK_HARDWARE
 COMMON_GLOBAL_CFLAGS += -DADD_LEGACY_ACQUIRE_BUFFER_SYMBOL
 COMMON_GLOBAL_CFLAGS += -DNO_SECURE_DISCARD
-COMMON_GLOBAL_CFLAGS += -DDISABLE_HW_ID_MATCH_CHECK
 
 # Graphics
 USE_OPENGL_RENDERER := true
@@ -84,22 +95,6 @@ TARGET_USES_ION := true
 TARGET_DISPLAY_USE_RETIRE_FENCE := true
 MAX_EGL_CACHE_KEY_SIZE := 12*1024
 MAX_EGL_CACHE_SIZE := 1024*1024
-BOARD_EGL_NEEDS_HANDLE_VALUE := true
-#Same as what I did with TWRP; LCD is flipped for some reason
-#BOARD_HAS_FLIPPED_SCREEN := true
-
-#BOARD_EGL_NEEDS_FNW := true
-#BOARD_EGL_SKIP_FIRST_DEQUEUE := true
-#BOARD_EGL_NEEDS_LEGACY_FB := true
-#BOARD_NEEDS_OLD_HWC_API := true
-
-#Don't need these flags for now.
-TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
-#BOARD_EGL_WORKAROUND_BUG_10194508 := true
-#TARGET_ENABLE_NON_PIE_SUPPORT := true
-
-TARGET_HAS_LEGACY_CAMERA_HAL1 := true
-TARGET_USES_MEDIA_EXTENSIONS := true
 
 # Surfaceflinger optimization for VD surfaces
 TARGET_FORCE_HWC_FOR_VIRTUAL_DISPLAYS := true
@@ -157,4 +152,5 @@ BOARD_SEPOLICY_UNION += \
     zygote.te
 
 BOARD_SEPOLICY_REPLACE += \
-domain.te
+    domain.te
+

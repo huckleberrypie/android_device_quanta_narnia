@@ -116,6 +116,19 @@ PRODUCT_COPY_FILES += \
 # Audio
 PRODUCT_PACKAGES += \
 	audio.a2dp.default
+
+# audio
+PRODUCT_PACKAGES += \
+	audio_policy.default \
+	audio_policy.stub \
+	audio.r_submix.default \
+	audio.usb.default \
+	audio.primary.default \
+	libaudio-resampler
+
+# cam
+PRODUCT_PACKAGES += \
+	libcameraanalyzer
     
 # Bluetooth
 PRODUCT_PACKAGES += \
