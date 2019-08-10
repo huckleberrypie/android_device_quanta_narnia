@@ -175,9 +175,9 @@ system/vendor/lib/libstagefright_soft_ddpdec.so
 system/vendor/lib/soundfx/libswdap.so
 system/vendor/media/LMspeed_508.emd
 system/vendor/media/PFFprec_600.emd
-system/vendor/lib/libwvdrm_L3.so
+system/vendor/lib/libwvdrm_L1.so
 system/vendor/lib/libwvm.so
-system/vendor/lib/libWVStreamControlAPI_L3.so
+system/vendor/lib/libWVStreamControlAPI_L1.so
 system/vendor/lib/mediadrm/libmockdrmcryptoplugin.so
 #system/vendor/lib/mediadrm/libplayreadydrmplugin.so
 system/vendor/lib/mediadrm/libwvdrmengine.so
