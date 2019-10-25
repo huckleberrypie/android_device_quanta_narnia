@@ -155,3 +155,7 @@ BOARD_SEPOLICY_UNION += \
 BOARD_SEPOLICY_REPLACE += \
     domain.te
 
+
+# Shims
+TARGET_LD_SHIM_LIBS := \
+/system/lib/egl/libEGL_mali.so|libshim_egl.so
