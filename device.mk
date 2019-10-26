@@ -159,6 +159,10 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
     PRODUCT_MODEL="EPICv2" \
 TARGET_DEVICE="UYT2"
 
+# libshims
+PRODUCT_PACKAGES += \
+   libshim_egl
+
 # call dalvik heap config
 $(call inherit-product, frameworks/native/build/tablet-7in-hdpi-1024-dalvik-heap.mk)
 
