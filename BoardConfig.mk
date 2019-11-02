@@ -158,4 +158,5 @@ BOARD_SEPOLICY_REPLACE += \
 
 # Shims
 TARGET_LD_SHIM_LIBS := \
-/system/lib/egl/libEGL_mali.so|libshim_egl.so
+/system/lib/egl/libEGL_mali.so|libshim_egl.so \
+/system/lib/hw/hwcomposer.mt8127.so|libshim_hwc.so
