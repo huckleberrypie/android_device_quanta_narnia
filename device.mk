@@ -161,7 +161,8 @@ TARGET_DEVICE="UYT2"
 
 # libshims
 PRODUCT_PACKAGES += \
-   libshim_egl
+   libshim_egl \
+   libshim_hwc
 
 # call dalvik heap config
 $(call inherit-product, frameworks/native/build/tablet-7in-hdpi-1024-dalvik-heap.mk)
